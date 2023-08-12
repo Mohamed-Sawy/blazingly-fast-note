@@ -1,0 +1,12 @@
+{
+  "name": "bnote",
+  "version": "1.0.0",
+  "description": "bnote is a note-taking CLI app",
+  "type": "module",
+  "main": "bnote.js",
+  "bin": "bnote.js",
+  "scripts": {
+  },
+  "author": "Mohamed-Sawy",
+  "license": "MIT"
+}
