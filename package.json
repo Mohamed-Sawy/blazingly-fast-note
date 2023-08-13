@@ -5,8 +5,11 @@
   "type": "module",
   "main": "bnote.js",
   "bin": "bnote.js",
-  "scripts": {
-  },
+  "scripts": {},
   "author": "Mohamed-Sawy",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "path": "^0.12.7",
+    "yargs": "^17.7.2"
+  }
 }
