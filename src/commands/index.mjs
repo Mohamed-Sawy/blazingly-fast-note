@@ -1,8 +1,8 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers"
-import { fileURLToPath, pathToFileURL } from "url";
-import path from "path"
-import fs from "fs/promises"
+import { fileURLToPath } from "url";
+import path from "path";
+import directoryScanner from "../helpers/directoryScanner.mjs";
 
 
 configureCommands();
@@ -10,26 +10,23 @@ configureCommands();
 async function configureCommands() {
     let argsConfiguration = yargs(hideBin(process.argv));
 
-    const modulePaths = await getModulePaths();
-
-    const commandModules = await Promise.all(
-        modulePaths.map(modulePath => import(pathToFileURL(modulePath)))
-    );
+    const commandModules = await getCommandModules();
 
     for (const cmdModule of commandModules) {
         argsConfiguration.command(cmdModule);
     }
-
+    
     argsConfiguration
         .demandCommand(1, 1, "You must specify a command")
         .strict()
         .parse();
 }
 
-async function getModulePaths() {
-    const commandsDirectory = path.dirname(fileURLToPath(import.meta.url));
+async function getCommandModules() {
+    const directory = path.dirname(fileURLToPath(import.meta.url));
 
-    return (await fs.readdir(commandsDirectory))
-                .map(fileName => path.join(commandsDirectory, fileName))
-                .filter(filePath => path.basename(filePath).startsWith('cmd-'));
+    return await directoryScanner.getModules({
+        directory, 
+        filesFilter: filePath => path.basename(filePath).startsWith('cmd-')
+    });
 }
