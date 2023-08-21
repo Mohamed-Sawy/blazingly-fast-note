@@ -1,4 +1,5 @@
 #!/usr/bin/env node
 
-import './src/commands/index.mjs'
+import 'dotenv/config';
+import './src/commands/index.mjs';
 

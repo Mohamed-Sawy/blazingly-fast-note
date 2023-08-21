@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import mongoose, { mongo } from 'mongoose';
 import fs from 'fs/promises';
 import path from 'path';
