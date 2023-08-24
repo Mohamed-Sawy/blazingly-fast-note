@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 
-export const modelName = 'secure-note';
+export const modelName = 'secureNote';
 
 export const schema = new mongoose.Schema({
     content: String,
