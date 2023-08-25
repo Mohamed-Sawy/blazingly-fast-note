@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import 'dotenv/config';
-import chalk from 'chalk';
-
+import db from './src/database/index.mjs';
+import ioHandler from './src/helpers/ioHandler.mjs';
 
 const requiredEnvVars = [
     process.env.DB_CONNECTION_STRING,
@@ -11,8 +11,9 @@ const requiredEnvVars = [
 
 if (requiredEnvVars.every(exists)) {
     start();
-} else {
-    console.error(chalk.red("Error: Environment is not configured correctly"));
+}
+else {
+    ioHandler.showError('Environment is not configured correctly');
 }
 
 
@@ -21,5 +22,7 @@ function exists(variable) {
 }
 
 async function start() {
-    import('./src/commands/index.mjs');
+    await import('./src/commands/index.mjs');
+
+    db.close();
 }
