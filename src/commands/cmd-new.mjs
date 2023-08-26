@@ -2,7 +2,7 @@ import db from "../database/index.mjs";
 import ioHandler from "../helpers/ioHandler.mjs";
 import secureNoteHandler from '../helpers/secureNoteHandler.mjs'
 
-export const command = "new <note> [tag] [--secure]";
+export const command = "new <note> [--tag] [--secure]";
 
 export const describe = "  =>    Create a new note";
 
@@ -28,6 +28,7 @@ export async function handler(argv) {
             tag: argv.tag
         });
 
+        ioHandler.showOutput('Note has been added successfully.', 'success');
         return;
     }
 
@@ -40,9 +41,10 @@ export async function handler(argv) {
     const secureNote = secureNoteHandler.getSecureNote(noteBuilder.note, noteBuilder.secondPassword);
     secureNote.tag = noteBuilder.tag;
 
-    ioHandler.showOutput(
-        `Note has been encrypted successfully, use the tag: {${secureNote.tag}} with the password provided to retrieve it.`
-    , 'success');
+    ioHandler.showOutput('Note has been encrypted successfully', 'success');
+    if (noteBuilder.secondPassword) {
+        ioHandler.showOutput(`use the tag: {${secureNote.tag}} with the password provided to retrieve it.`);
+    }
 
     await db.models.secureNote.create(secureNote);
 }
@@ -57,10 +59,11 @@ async function buildSecureNote(argv) {
     if (allowSecLayer) {
         noteBuilder.secondPassword = await ioHandler.getInput('Enter a password for this note:', 'password');
         
-        if (!argv.tag) {
-            argv.tag = await ioHandler.getInput('You must specify a tag to be able to retrieve the note:');
+        if (argv.tag === 'general') {
+            argv.tag = await ioHandler.getInput('You must specify a tag to be able to retrieve the note (or type "general"):');
         }
     }
 
     noteBuilder.tag = argv.tag;
+    return noteBuilder;
 }

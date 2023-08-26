@@ -28,7 +28,7 @@ function getSecureNote(note, secondKey) {
     return encryptedObject;
 };
 
-function encrypt(msg, {key, iv, inEncoding = 'utf8', outEncoding = 'hex'}) {
+function encrypt(msg, {key, iv, inEncoding = 'utf8', outEncoding = 'hex'} = {}) {
     const cipher = crypto.createCipheriv('aes256', Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
     
     return cipher.update(msg, inEncoding, outEncoding) + cipher.final(outEncoding);
@@ -62,7 +62,7 @@ function getNoteContent(secureNote, globalKey, secondKey) {
     return {status: true, content};
 }
 
-function decrypt(msg, {key, iv, inEncoding = 'hex', outEncoding = 'utf8'}) {
+function decrypt(msg, {key, iv, inEncoding = 'hex', outEncoding = 'utf8'} = {}) {
     const decipher = crypto.createDecipheriv('aes256', Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
 
     return decipher.update(msg, inEncoding, outEncoding) + decipher.final(outEncoding);

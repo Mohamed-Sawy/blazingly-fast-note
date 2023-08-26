@@ -5,6 +5,7 @@ function decorate(msg, type = 'regular') {
     const colors = {
         'password': str => chalk.blue(str),
         'confirm': str => chalk.yellow(str),
+        'queryResult': str => chalk.magenta(str),
         'success': str => chalk.green(str),
         'failure': str => chalk.red(str),
         'regular': str => chalk.gray(str)
@@ -16,11 +17,11 @@ function decorate(msg, type = 'regular') {
 }
 
 function showOutput(msg, type = 'regular') {
-    process.stdout.write(decorate(msg, type));
+    process.stdout.write(decorate(`${msg}\n`, type));
 }
 
 function showError(msg) {
-    process.stderr.write(decorate(`Error: ${msg}`, 'failure'));
+    process.stderr.write(decorate(`Error: ${msg}\n`, 'failure'));
 }
 
 async function getInput(msg, type = 'input') {

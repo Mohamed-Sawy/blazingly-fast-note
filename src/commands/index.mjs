@@ -5,7 +5,7 @@ import path from "path";
 import directoryScanner from "../helpers/directoryScanner.mjs";
 
 
-configureCommands();
+await configureCommands();
 
 async function configureCommands() {
     let argsConfiguration = yargs(hideBin(process.argv));
@@ -16,10 +16,10 @@ async function configureCommands() {
         argsConfiguration.command(cmdModule);
     }
     
-    argsConfiguration
+    await (argsConfiguration
         .demandCommand(1, 1, "You must specify a command")
         .strict()
-        .parse();
+        .parse());
 }
 
 async function getCommandModules() {
