@@ -40,12 +40,12 @@ function getNoteContent(secureNote, globalKey, secondKey) {
         secondKey = crypto.scryptSync(secondKey, secureNote.iv, KEYLEN).toString('hex');
     }
 
-    if (!validateKeys(secureNote, globalKey, secondKey)) {
+    if (!validateKeys(secureNote.key, globalKey, secondKey)) {
         return {status: false};
     }
 
     let content = secureNote.content;
-    if (secureNote.key !== undefined) {
+    if (secureNote.key) {
         content = decrypt(content, {
             key: secondKey,
             iv: secureNote.iv,
@@ -68,11 +68,9 @@ function decrypt(msg, {key, iv, inEncoding = 'hex', outEncoding = 'utf8'} = {}) 
     return decipher.update(msg, inEncoding, outEncoding) + decipher.final(outEncoding);
 }
 
-function validateKeys(secureNote, globalKey, secondKey) {
-    if (globalKey !== process.env.SNOTES_PASSWORD) return false;
-    if (secureNote.key && secondKey && secondKey !== secureNote.key) return false;
-
-    return true;
+function validateKeys(secureNoteKey, globalKey, secondKey) {
+    return globalKey === process.env.SNOTES_PASSWORD
+        && (!secureNoteKey || secureNoteKey === secondKey);
 }
 
 export default { getSecureNote, getNoteContent };
