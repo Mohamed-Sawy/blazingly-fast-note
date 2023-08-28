@@ -5,7 +5,7 @@ const KEYLEN = 32;
 
 function getSecureNote(note, secondKey) {
     const iv = crypto.randomBytes(16).toString('hex');
-    const globalKey = crypto.scryptSync(process.env.SNOTES_PASSWORD, iv, KEYLEN).toString('hex');
+    const globalKey = hashKey(process.env.SNOTES_PASSWORD, iv);
     const encryptedObject = {iv};
 
     let content = encrypt(note, {
@@ -14,7 +14,7 @@ function getSecureNote(note, secondKey) {
     });
 
     if (secondKey) {
-        secondKey = crypto.scryptSync(secondKey, iv, KEYLEN).toString('hex');
+        secondKey = hashKey(secondKey, iv);
         content = encrypt(content, {
             key: secondKey,
             iv,
@@ -37,12 +37,12 @@ function encrypt(msg, {key, iv, inEncoding = 'utf8', outEncoding = 'hex'} = {}) 
 
 
 function getNoteContent(secureNote, globalKey, secondKey) {
-    if (secondKey) {
-        secondKey = crypto.scryptSync(secondKey, secureNote.iv, KEYLEN).toString('hex');
-    }
-
     if (!validateKeys(secureNote.key, globalKey, secondKey)) {
         return {status: false};
+    }
+    
+    if (secondKey) {
+        secondKey = hashKey(secondKey, secureNote.iv);
     }
 
     let content = secureNote.content;
@@ -69,9 +69,17 @@ function decrypt(msg, {key, iv, inEncoding = 'hex', outEncoding = 'utf8'} = {}) 
     return decipher.update(msg, inEncoding, outEncoding) + decipher.final(outEncoding);
 }
 
-function validateKeys(secureNoteKey, globalKey, secondKey) {
+function hashKey(key, iv) {
+    return crypto.scryptSync(key, iv, KEYLEN).toString('hex');
+}
+
+function validateKeys(secureNote, globalKey, secondKey) {
+    if (secondKey) {
+        secondKey = hashKey(secondKey, secureNote.iv);
+    }
+
     return checkGlobalPassword(globalKey)
-        && (!secureNoteKey || secureNoteKey === secondKey);
+        && (!secureNote.key || secureNote.key === secondKey);
 }
 
 function checkGlobalPassword(globalPassword) {

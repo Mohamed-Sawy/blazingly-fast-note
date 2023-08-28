@@ -48,11 +48,10 @@ async function deleteNote(id, {globalKey, secondKey} = {}) {
         const noteModel = noteDocument.noteModel;
         await noteModel.deleteOne();
 
-        await noteModel.save();
         return { status: true };
     }
 
-    return { status: false };
+    return noteDocument;
 }
 
 async function getNoteById(id, {globalKey, secondKey}) {
@@ -82,7 +81,7 @@ async function getNote(id) {
 
 async function getSecureNote(id, globalKey, secondKey) {
     const noteDocument = await getNoteDocument(db.models.secureNote, id);
-    if (noteDocument.status && !secureNoteHandler.validateKeys(noteDocument.key, globalKey, secondKey)) {
+    if (noteDocument.status && !secureNoteHandler.validateKeys(noteDocument.noteModel, globalKey, secondKey)) {
         return {
             status: false,
             errorMsg: 'Incorrect password'
