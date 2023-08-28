@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 
+
 const KEYLEN = 32;
 
 function getSecureNote(note, secondKey) {
@@ -69,8 +70,12 @@ function decrypt(msg, {key, iv, inEncoding = 'hex', outEncoding = 'utf8'} = {}) 
 }
 
 function validateKeys(secureNoteKey, globalKey, secondKey) {
-    return globalKey === process.env.SNOTES_PASSWORD
+    return checkGlobalPassword(globalKey)
         && (!secureNoteKey || secureNoteKey === secondKey);
 }
 
-export default { getSecureNote, getNoteContent };
+function checkGlobalPassword(globalPassword) {
+    return globalPassword === process.env.SNOTES_PASSWORD
+}
+
+export default { checkGlobalPassword, validateKeys, getSecureNote, getNoteContent };

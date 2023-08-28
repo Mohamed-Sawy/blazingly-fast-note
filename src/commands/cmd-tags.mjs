@@ -1,6 +1,6 @@
 import db from '../database/index.mjs';
 import ioHandler from '../helpers/ioHandler.mjs';
-
+import passwordHandler from '../helpers/passwordHandler.mjs';
 
 export const command = "tags [--all] [--secure]";
 
@@ -37,8 +37,9 @@ async function showTags({showPublic = true, showPrivate = true} = {}) {
     }
 
     if (showPrivate) {
-        if (! await checkPassword()) {
-            ioHandler.showOutput('Global Passowrd incorrect', 'failure');
+        const password = await passwordHandler.askForGlobalPassword();
+        if (!password.status) {
+            ioHandler.showError(password.errorMsg);
             return;
         }
 
@@ -58,13 +59,4 @@ async function getTags(dbModel) {
     }
 
     return Array.from(tags.values()).join('\n');
-}
-
-async function checkPassword() {
-    const globalPassword = await ioHandler.getInput('Enter the global password for notes:', 'password');
-    if (globalPassword !== process.env.SNOTES_PASSWORD) {
-        return false;
-    }
-
-    return true;
 }
