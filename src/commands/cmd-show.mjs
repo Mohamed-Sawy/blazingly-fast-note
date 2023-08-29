@@ -70,7 +70,7 @@ async function getNotesPresentation(dbModel, {filterQuery = {}, secure = false, 
 
     let noteModels = await dbModel.find(filterQuery);
     if (secure) {
-        noteModels = await decryptSecureNotes(noteModels, globalPassword, secondPassword);
+        noteModels = decryptSecureNotes(noteModels, globalPassword, secondPassword);
     }
 
     for (const note of noteModels) {
@@ -87,7 +87,7 @@ async function getNotesPresentation(dbModel, {filterQuery = {}, secure = false, 
     return notesPresentation.join('\n--------------------------------------------\n');
 }
 
-async function decryptSecureNotes(secureNotes, globalPassword, secondPassword) {
+function decryptSecureNotes(secureNotes, globalPassword, secondPassword) {
     const notes = [];
     for (const sNote of secureNotes) {
         const decryptedNote = secureNoteHandler.getNoteContent(sNote, globalPassword, secondPassword);

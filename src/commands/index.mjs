@@ -8,7 +8,7 @@ import directoryScanner from "../helpers/directoryScanner.mjs";
 await configureCommands();
 
 async function configureCommands() {
-    let argsConfiguration = yargs(hideBin(process.argv));
+    const argsConfiguration = yargs(hideBin(process.argv));
 
     const commandModules = await getCommandModules();
 
@@ -22,10 +22,10 @@ async function configureCommands() {
         .parse());
 }
 
-async function getCommandModules() {
+function getCommandModules() {
     const directory = path.dirname(fileURLToPath(import.meta.url));
 
-    return await directoryScanner.getModules({
+    return directoryScanner.getModules({
         directory, 
         filesFilter: filePath => path.basename(filePath).startsWith('cmd-')
     });

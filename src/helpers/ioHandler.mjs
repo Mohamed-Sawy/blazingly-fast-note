@@ -25,7 +25,7 @@ function showError(msg) {
 }
 
 async function getInput(msg, type = 'input') {
-    let query = {
+    const query = {
         name: 'userInput',
         type,
         message: decorate(msg, type),
@@ -36,7 +36,7 @@ async function getInput(msg, type = 'input') {
         }
     };
 
-    if (type == 'password') {
+    if (type === 'password') {
         query.mask = '*';
     }
 

@@ -75,8 +75,8 @@ async function getNoteById(id, {globalKey, secondKey}) {
     return { noteDocument };
 }
 
-async function getNote(id) {
-    return await getNoteDocument(db.models.note, id);
+function getNote(id) {
+    return getNoteDocument(db.models.note, id);
 }
 
 async function getSecureNote(id, globalKey, secondKey) {

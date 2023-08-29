@@ -17,10 +17,10 @@ async function configureDatabase() {
     }
 }
 
-async function getSchemaModules() {
+function getSchemaModules() {
     const directory = path.join(path.dirname(fileURLToPath(import.meta.url)), '/schemas');
     
-    return await directoryScanner.getModules({directory});
+    return directoryScanner.getModules({directory});
 }
 
 function close() {

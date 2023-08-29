@@ -37,7 +37,7 @@ function encrypt(msg, {key, iv, inEncoding = 'utf8', outEncoding = 'hex'} = {}) 
 
 
 function getNoteContent(secureNote, globalKey, secondKey) {
-    if (!validateKeys(secureNote.key, globalKey, secondKey)) {
+    if (!validateKeys(secureNote, globalKey, secondKey)) {
         return {status: false};
     }
     

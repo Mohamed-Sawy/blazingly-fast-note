@@ -32,7 +32,7 @@ export async function handler(argv) {
     });
 
     if (!result.status) {
-        ioHandler.showError(`No changes made.`);
+        ioHandler.showError('No changes made.');
         ioHandler.showOutput(`Due to: ${result.errorMsg}`);
     }
     else {
